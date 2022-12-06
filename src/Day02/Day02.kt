@@ -34,13 +34,13 @@ import readInput
 fun main() {
     fun part1(input: List<String>): Int {
         val rock = 1;
-        val myRockChar = 'X';
+        val iLose = 'X';
         val theirRockChar = 'A';
         val paper = 2;
-        val myPaperChar = 'Y';
+        val iTie = 'Y';
         val theirPaperChar = 'B';
         val scissors = 3;
-        val myScissorsChar = 'Z';
+        val iWin = 'Z';
         val theirScissorsChar = 'C';
         val win = 6;
         val draw = 3;
@@ -60,10 +60,10 @@ fun main() {
 
         val myGame = me.listIterator();
 
-        for ((index, myChoice) in myGame.withIndex()) {
+        for ((index, myResult) in myGame.withIndex()) {
             val theirChoice = opponent[index];
 
-            if (myChoice == myRockChar) {
+            if (myResult == iLose) {
                 score += rock;
 
                 if (theirChoice == theirRockChar) {
@@ -73,7 +73,7 @@ fun main() {
                 } else if (theirChoice == theirScissorsChar) {
                     score += win;
                 }
-            } else if (myChoice == myPaperChar) {
+            } else if (myResult == iTie) {
                 score += paper;
 
                 if (theirChoice == theirRockChar) {
@@ -102,6 +102,70 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
+        val rock = 1;
+        val iLose = 'X';
+        val theirRockChar = 'A';
+        val paper = 2;
+        val iTie = 'Y';
+        val theirPaperChar = 'B';
+        val scissors = 3;
+        val iWin = 'Z';
+        val theirScissorsChar = 'C';
+        val win = 6;
+        val draw = 3;
+        val loss = 0;
+    
+        var score = 0;
+
+        var opponent = mutableListOf<Char>();
+        var me = mutableListOf<Char>();
+
+        val itr = input.listIterator();
+
+        itr.forEach {
+            opponent.add(it[0]);
+            me.add(it[2]);
+        }
+
+        val myGame = me.listIterator();
+
+        for ((index, myResult) in myGame.withIndex()) {
+            val theirChoice = opponent[index];
+
+            if (myResult == iLose) {
+                score += loss;
+
+                if (theirChoice == theirRockChar) {
+                    score += scissors;
+                } else if (theirChoice == theirPaperChar) {
+                    score += rock;
+                } else if (theirChoice == theirScissorsChar) {
+                    score += paper;
+                }
+            } else if (myResult == iTie) {
+                score += draw;
+
+                if (theirChoice == theirRockChar) {
+                    score += rock;
+                } else if (theirChoice == theirPaperChar) {
+                    score += paper;
+                } else if (theirChoice == theirScissorsChar) {
+                    score += scissors;
+                }
+            } else {
+                score += win;
+
+                if (theirChoice == theirRockChar) {
+                    score += paper;
+                } else if (theirChoice == theirPaperChar) {
+                    score += scissors;
+                } else if (theirChoice == theirScissorsChar) {
+                    score += rock;
+                }
+            }
+        }
+
+        println("My second score: $score");
 
         return input.size
     }
