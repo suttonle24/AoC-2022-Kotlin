@@ -33,88 +33,80 @@ import readInput
 
 fun main() {
     fun part1(input: List<String>): Int {
-        var highestTotal = 0;
-        var index = 0;
-        var indexWithHighest = 0;
-        var currentTotal = 0;
+        val rock = 1;
+        val myRockChar = 'X';
+        val theirRockChar = 'A';
+        val paper = 2;
+        val myPaperChar = 'Y';
+        val theirPaperChar = 'B';
+        val scissors = 3;
+        val myScissorsChar = 'Z';
+        val theirScissorsChar = 'C';
+        val win = 6;
+        val draw = 3;
+        val loss = 0;
+
+        var score = 0;
+
+        var opponent = mutableListOf<Char>();
+        var me = mutableListOf<Char>();
 
         val itr = input.listIterator();
-        while (itr.hasNext()) {
-            var cal = 0;
 
-            cal = try {
-                itr.next().toInt();
-            } catch (nfe: NumberFormatException) {
-                0;
-            }
+        itr.forEach {
+            opponent.add(it[0]);
+            me.add(it[2]);
+        }
 
-            if(cal > 0) {
-                currentTotal += cal;
-            } else {
-                if(highestTotal < currentTotal) {
-                    highestTotal = currentTotal;
-                    indexWithHighest = index;
+        val myGame = me.listIterator();
+
+        for ((index, myChoice) in myGame.withIndex()) {
+            val theirChoice = opponent[index];
+
+            if (myChoice == myRockChar) {
+                score += rock;
+
+                if (theirChoice == theirRockChar) {
+                    score += draw;
+                } else if (theirChoice == theirPaperChar) {
+                    score += loss;
+                } else if (theirChoice == theirScissorsChar) {
+                    score += win;
                 }
-                currentTotal = 0;
-                index++;
+            } else if (myChoice == myPaperChar) {
+                score += paper;
+
+                if (theirChoice == theirRockChar) {
+                    score += win;
+                } else if (theirChoice == theirPaperChar) {
+                    score += draw;
+                } else if (theirChoice == theirScissorsChar) {
+                    score += loss;
+                }
+            } else {
+                score += scissors;
+
+                if (theirChoice == theirRockChar) {
+                    score += loss;
+                } else if (theirChoice == theirPaperChar) {
+                    score += win;
+                } else if (theirChoice == theirScissorsChar) {
+                    score += draw;
+                }
             }
         }
 
-        println(highestTotal);
-        println(indexWithHighest);
+        println("My score: $score");
 
         return input.size
     }
 
     fun part2(input: List<String>): Int {
-        var highestTotal = 0;
-        var secondHighestTotal = 0;
-        var thirdHighestTotal = 0;
-        var topThreeTotal = 0;
-        var index = 0;
-        var indexWithHighest = 0;
-        var currentTotal = 0;
-
-        val itr = input.listIterator();
-        while (itr.hasNext()) {
-            var cal = 0;
-
-            cal = try {
-                itr.next().toInt();
-            } catch (nfe: NumberFormatException) {
-                0;
-            }
-
-            if(cal > 0) {
-                currentTotal += cal;
-            } else {
-                if(thirdHighestTotal < currentTotal) {
-                    thirdHighestTotal = currentTotal;
-                }
-                if(currentTotal > secondHighestTotal) {
-                    secondHighestTotal = thirdHighestTotal;
-                }
-                if(currentTotal > highestTotal) {
-                    highestTotal = secondHighestTotal;
-                }
-                currentTotal = 0;
-            }
-        }
-
-        topThreeTotal = thirdHighestTotal + secondHighestTotal + highestTotal;
-
-        println("third $thirdHighestTotal");
-        println("second $secondHighestTotal");
-        println("first $highestTotal");
-        println("top three total $topThreeTotal");
-
-        println(highestTotal);
-        println(indexWithHighest);
 
         return input.size
     }
 
-    val input = readInput("Day01/Day01")
+    val input = readInput("Day02/Day02")
     println(part1(input))
     println(part2(input))
 }
