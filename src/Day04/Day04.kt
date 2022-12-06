@@ -1,4 +1,4 @@
-package Day01
+package Day04
 
 import readInput
 
@@ -38,35 +38,49 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
+        var highestTotal = 0;
+        var secondHighestTotal = 0;
+        var thirdHighestTotal = 0;
         var topThreeTotal = 0;
-
-        var totals = mutableListOf<Int>();
+        var index = 0;
+        var indexWithHighest = 0;
+        var currentTotal = 0;
 
         val itr = input.listIterator();
-
-        var count = 0;
-
         while (itr.hasNext()) {
-            var current = 0;
-            current = try {
+            var cal = 0;
+
+            cal = try {
                 itr.next().toInt();
             } catch (nfe: NumberFormatException) {
                 0;
             }
 
-            if(current > 0) {
-                count += current
+            if(cal > 0) {
+                currentTotal += cal;
             } else {
-                totals.add(count)
-                count = 0
+                if(thirdHighestTotal < currentTotal) {
+                    thirdHighestTotal = currentTotal;
+                }
+                if(currentTotal > secondHighestTotal) {
+                    secondHighestTotal = thirdHighestTotal;
+                }
+                if(currentTotal > highestTotal) {
+                    highestTotal = secondHighestTotal;
+                }
+                currentTotal = 0;
             }
         }
 
-        totals.sortDescending();
+        topThreeTotal = thirdHighestTotal + secondHighestTotal + highestTotal;
 
-        topThreeTotal = totals.get(0) + totals.get(1) + totals.get(2);
+        println("third $thirdHighestTotal");
+        println("second $secondHighestTotal");
+        println("first $highestTotal");
+        println("top three total $topThreeTotal");
 
-        println("total: $topThreeTotal")
+        println(highestTotal);
+        println(indexWithHighest);
 
         return input.size
     }
