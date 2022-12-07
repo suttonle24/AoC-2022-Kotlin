@@ -128,10 +128,121 @@ fun main() {
             sumOfItems += priorityValue;
         }
 
+        println("sum of items in both compartments: $sumOfItems");
+
         return input.size
     }
 
     fun part2(input: List<String>): Int {
+        val lcPriorities = mapOf(
+            'a' to 1,
+            'b' to 2,
+            'c' to 3,
+            'd' to 4,
+            'e' to 5,
+            'f' to 6,
+            'g' to 7,
+            'h' to 8,
+            'i' to 9,
+            'j' to 10,
+            'k' to 11,
+            'l' to 12,
+            'm' to 13,
+            'n' to 14,
+            'o' to 15,
+            'p' to 16,
+            'q' to 17,
+            'r' to 18,
+            's' to 19,
+            't' to 20,
+            'u' to 21,
+            'v' to 22,
+            'w' to 23,
+            'x' to 24,
+            'y' to 25,
+            'z' to 26
+        );
+        val ucPriorities = mapOf(
+            'A' to 27,
+            'B' to 28,
+            'C' to 29,
+            'D' to 30,
+            'E' to 31,
+            'F' to 32,
+            'G' to 33,
+            'H' to 34,
+            'I' to 35,
+            'J' to 36,
+            'K' to 37,
+            'L' to 38,
+            'M' to 39,
+            'N' to 40,
+            'O' to 41,
+            'P' to 42,
+            'Q' to 43,
+            'R' to 44,
+            'S' to 45,
+            'T' to 46,
+            'U' to 47,
+            'V' to 48,
+            'W' to 49,
+            'X' to 50,
+            'Y' to 51,
+            'Z' to 52
+        );
+
+        var sackGroups = mutableListOf<List<String>>();
+        var tempSackGroup = mutableListOf<String>();
+        var sumOfBadges = 0;
+
+        val itr = input.listIterator();
+
+        for ((index, sack) in itr.withIndex()) {
+            tempSackGroup.add(sack);
+            if ((index + 1) % 3 == 0) {
+                sackGroups.add(tempSackGroup);
+                tempSackGroup = mutableListOf<String>();
+            }
+        }
+
+        for ((index, sackGroup) in sackGroups.withIndex()) {
+            var inSecond = false;
+            var inThird = false;
+            var badgeLetter = '%';
+            var badgeValue = 0;
+
+            val firstSack = sackGroup.get(0);
+            val secondSack = sackGroup.get(1);
+            val thirdSack = sackGroup.get(2);
+
+            for(i in firstSack.indices) {
+                badgeLetter = firstSack[i];
+
+                if(badgeLetter.isUpperCase()) {
+                    badgeValue = ucPriorities.getValue(badgeLetter);
+                } else {
+                    badgeValue = lcPriorities.getValue(badgeLetter);
+                }
+
+                if(secondSack.contains(badgeLetter)) {
+                    inSecond = true;
+                }
+
+                if(thirdSack.contains(badgeLetter)) {
+                    inThird = true;
+                }
+
+                if(inSecond && inThird) {
+                    sumOfBadges += badgeValue;
+                    break;
+                } else {
+                    inSecond = false;
+                    inThird = false;
+                }
+            }
+        }
+
+        println("Sum of badge groups: $sumOfBadges");
 
         return input.size
     }
