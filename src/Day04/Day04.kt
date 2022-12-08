@@ -40,6 +40,40 @@ fun main() {
 
     fun part2(input: List<String>): Int {
 
+        var overlaps = 0;
+
+        val itr = input.listIterator();
+
+        itr.forEach {
+            var leftStr = "";
+            var leftLow = 0;
+            var leftHigh = 0;
+            var rightStr = "";
+            var rightLow = 0;
+            var rightHigh = 0;
+
+            leftStr = it.substring(0, it.indexOf(','));
+            rightStr = it.substring(it.indexOf(',') + 1, it.length);
+
+            leftLow = leftStr.substring(0, leftStr.indexOf('-')).toInt();
+            leftHigh = leftStr.substring(leftStr.indexOf('-') + 1, leftStr.length).toInt();
+
+            rightLow = rightStr.substring(0, rightStr.indexOf('-')).toInt();
+            rightHigh = rightStr.substring(rightStr.indexOf('-') + 1, rightStr.length).toInt();
+
+            if (leftLow <= rightLow && leftHigh >= rightHigh) {
+                overlaps++;
+            } else if (leftLow >= rightLow && leftHigh <= rightHigh) {
+                overlaps++;
+            } else if (leftLow in rightLow..rightHigh) {
+                overlaps++;
+            } else if (leftHigh in rightLow .. rightHigh) {
+                overlaps++;
+            }
+        }
+
+        println("Total overlaps: $overlaps");
+
         return input.size
     }
 
