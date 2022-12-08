@@ -4,88 +4,46 @@ import readInput
 
 fun main() {
     fun part1(input: List<String>): Int {
-        var highestTotal = 0;
-        var index = 0;
-        var indexWithHighest = 0;
-        var currentTotal = 0;
+
+        var fullContainments = 0;
 
         val itr = input.listIterator();
-        while (itr.hasNext()) {
-            var cal = 0;
 
-            cal = try {
-                itr.next().toInt();
-            } catch (nfe: NumberFormatException) {
-                0;
-            }
+        itr.forEach {
+            var leftStr = "";
+            var leftLow = 0;
+            var leftHigh = 0;
+            var rightStr = "";
+            var rightLow = 0;
+            var rightHigh = 0;
 
-            if(cal > 0) {
-                currentTotal += cal;
-            } else {
-                if(highestTotal < currentTotal) {
-                    highestTotal = currentTotal;
-                    indexWithHighest = index;
-                }
-                currentTotal = 0;
-                index++;
+            leftStr = it.substring(0, it.indexOf(','));
+            rightStr = it.substring(it.indexOf(',') + 1, it.length);
+
+            leftLow = leftStr.substring(0, leftStr.indexOf('-')).toInt();
+            leftHigh = leftStr.substring(leftStr.indexOf('-') + 1, leftStr.length).toInt();
+
+            rightLow = rightStr.substring(0, rightStr.indexOf('-')).toInt();
+            rightHigh = rightStr.substring(rightStr.indexOf('-') + 1, rightStr.length).toInt();
+
+            if (leftLow <= rightLow && leftHigh >= rightHigh) {
+                fullContainments++;
+            } else if (leftLow >= rightLow && leftHigh <= rightHigh) {
+                fullContainments++;
             }
         }
 
-        println(highestTotal);
-        println(indexWithHighest);
+        println("Total full containments: $fullContainments");
 
         return input.size
     }
 
     fun part2(input: List<String>): Int {
-        var highestTotal = 0;
-        var secondHighestTotal = 0;
-        var thirdHighestTotal = 0;
-        var topThreeTotal = 0;
-        var index = 0;
-        var indexWithHighest = 0;
-        var currentTotal = 0;
-
-        val itr = input.listIterator();
-        while (itr.hasNext()) {
-            var cal = 0;
-
-            cal = try {
-                itr.next().toInt();
-            } catch (nfe: NumberFormatException) {
-                0;
-            }
-
-            if(cal > 0) {
-                currentTotal += cal;
-            } else {
-                if(thirdHighestTotal < currentTotal) {
-                    thirdHighestTotal = currentTotal;
-                }
-                if(currentTotal > secondHighestTotal) {
-                    secondHighestTotal = thirdHighestTotal;
-                }
-                if(currentTotal > highestTotal) {
-                    highestTotal = secondHighestTotal;
-                }
-                currentTotal = 0;
-            }
-        }
-
-        topThreeTotal = thirdHighestTotal + secondHighestTotal + highestTotal;
-
-        println("third $thirdHighestTotal");
-        println("second $secondHighestTotal");
-        println("first $highestTotal");
-        println("top three total $topThreeTotal");
-
-        println(highestTotal);
-        println(indexWithHighest);
 
         return input.size
     }
 
-    val input = readInput("Day01/Day01")
+    val input = readInput("Day04/Day04")
     println(part1(input))
     println(part2(input))
 }
