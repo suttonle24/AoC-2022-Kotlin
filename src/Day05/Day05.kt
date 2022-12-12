@@ -1,91 +1,138 @@
-package Day05
+package Day04
 
 import readInput
 
 fun main() {
     fun part1(input: List<String>): Int {
-        var highestTotal = 0;
-        var index = 0;
-        var indexWithHighest = 0;
-        var currentTotal = 0;
 
-        val itr = input.listIterator();
-        while (itr.hasNext()) {
-            var cal = 0;
+        fun getStacks(input: List<String>): ArrayDeque<ArrayDeque<Char>> {
 
-            cal = try {
-                itr.next().toInt();
-            } catch (nfe: NumberFormatException) {
-                0;
-            }
+            val itr = input.listIterator();
 
-            if(cal > 0) {
-                currentTotal += cal;
-            } else {
-                if(highestTotal < currentTotal) {
-                    highestTotal = currentTotal;
-                    indexWithHighest = index;
+            var stacks = ArrayDeque<ArrayDeque<Char>>();
+
+            for ((i, line) in itr.withIndex()) {
+                val lineArray = line.toCharArray();
+                var currentStack = 1;
+
+                for((j, char) in lineArray.withIndex()) {
+
+                    if(j !== 0 && j % 4 == 0) {
+                        val thisChar = lineArray[j-3];
+                        var thisStack = ArrayDeque<Char>();
+
+                        // check to see if this stack has already been created
+                        try {
+                            thisStack = stacks[currentStack - 1];
+                        } catch (ex : Exception) {
+                            // Add the new stack because it doesn't yet exist
+                            stacks.addLast(thisStack);
+                        }
+
+                        currentStack++;
+
+                        if (lineArray[j-2] == ']') {
+                            thisStack.addLast(thisChar);
+                        }
+                    } else if(j == lineArray.size - 1) {
+                        val thisChar = lineArray[j-1];
+                        var thisStack = ArrayDeque<Char>();
+
+                        // check to see if this stack has already been created
+                        try {
+                            thisStack = stacks[currentStack - 1];
+                        } catch (ex : Exception) {
+                            // Add the new stack because it doesn't yet exist
+                            stacks.addLast(thisStack);
+                        }
+                        if (lineArray[j] == ']') {
+                            thisStack.addLast(thisChar);
+                        }
+                        break;
+                    }
                 }
-                currentTotal = 0;
-                index++;
+
+                if (line.length == 0) {
+                    break;
+                }
             }
+
+            return stacks;
         }
 
-        println(highestTotal);
-        println(indexWithHighest);
+        fun instructionParser(instructionString: String): ArrayDeque<Int> {
+            val instructionArray = instructionString.split(' ');
+            var instructions = ArrayDeque<Int>();
+
+            instructions.addLast(Integer.parseInt(instructionArray[1])); // "amount"
+            instructions.addLast(Integer.parseInt(instructionArray[3])); // "from"
+            instructions.addLast(Integer.parseInt(instructionArray[5])); // "to"
+
+            return instructions;
+        }
+
+        fun getInstructions(input: List<String>): ArrayDeque<ArrayDeque<Int>> {
+            val itr = input.listIterator();
+
+            var instructions = ArrayDeque<ArrayDeque<Int>>();
+
+            for ((i, line) in itr.withIndex()) {
+                if(line.contains("move")){
+                    instructions.addLast(instructionParser(line));
+                }
+            }
+
+            return instructions;
+        }
+
+        fun processStacks(
+            stacks: ArrayDeque<ArrayDeque<Char>>,
+            instructions: ArrayDeque<ArrayDeque<Int>>) {
+
+            for ((i, instruction) in instructions.withIndex()) {
+                val move = instruction[0];
+                val from = instruction[1] - 1; // account for zero-index
+                val to = instruction[2] - 1;   // account for zero-index
+
+                for(i in 1 .. move) {
+                    stacks[to].addFirst(stacks[from].removeFirst());
+                }
+            }
+
+        }
+
+        var stacks: ArrayDeque<ArrayDeque<Char>> = getStacks(input);
+        var instructions: ArrayDeque<ArrayDeque<Int>> = getInstructions(input);
+
+        processStacks(stacks, instructions);
+
+        fun printAnswer(stacks: ArrayDeque<ArrayDeque<Char>>) {
+            var answer = "";
+            stacks.map {
+                var topChar = it[0];
+                answer += topChar;
+            }
+
+            println(answer);
+        }
+
+        printAnswer(stacks);
 
         return input.size
     }
 
     fun part2(input: List<String>): Int {
-        var highestTotal = 0;
-        var secondHighestTotal = 0;
-        var thirdHighestTotal = 0;
-        var topThreeTotal = 0;
-        var index = 0;
-        var indexWithHighest = 0;
-        var currentTotal = 0;
 
         val itr = input.listIterator();
-        while (itr.hasNext()) {
-            var cal = 0;
 
-            cal = try {
-                itr.next().toInt();
-            } catch (nfe: NumberFormatException) {
-                0;
-            }
+        itr.forEach {
 
-            if(cal > 0) {
-                currentTotal += cal;
-            } else {
-                if(thirdHighestTotal < currentTotal) {
-                    thirdHighestTotal = currentTotal;
-                }
-                if(currentTotal > secondHighestTotal) {
-                    secondHighestTotal = thirdHighestTotal;
-                }
-                if(currentTotal > highestTotal) {
-                    highestTotal = secondHighestTotal;
-                }
-                currentTotal = 0;
-            }
         }
-
-        topThreeTotal = thirdHighestTotal + secondHighestTotal + highestTotal;
-
-        println("third $thirdHighestTotal");
-        println("second $secondHighestTotal");
-        println("first $highestTotal");
-        println("top three total $topThreeTotal");
-
-        println(highestTotal);
-        println(indexWithHighest);
 
         return input.size
     }
 
-    val input = readInput("Day01/Day01")
+    val input = readInput("Day05/Day05")
     println(part1(input))
     println(part2(input))
 }
